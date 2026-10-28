@@ -1,11 +1,14 @@
 /* ===== assets.js : รายการไฟล์รูป =====
+   STILL = true  -> โหมดภาพนิ่ง (สำหรับ ESP32): ใช้ภาพนิ่ง 64x64 ต่อร่าง และพื้นหลัง 224x144 ไม่มีอนิเมชันสไปรต์
+   STILL = false -> โหมดเดิม: สไปรต์ชีต 3x3 มีอนิเมชันเดิน/โจมตี
+   - ATLAS : คีย์ = "สายพันธุ์_ร่าง" เช่น "2_1"  (สายพันธุ์ 0-15)
    - BG    : พื้นหลังของแต่ละโซน (index = เลขโซน 0-5)
-   - ATLAS : สไปรต์ชีตมอนสเตอร์ คีย์ = "สายพันธุ์_ร่าง" เช่น "2_1"
-             สายพันธุ์ 0-5 = ชุดเดิม, 6-15 = ชุดใหม่ (หอม กระเทียม ข้าวโพด มะเขือเทศ บรอกโคลี เห็ด ไชเท้า บีท มันฝรั่ง มันเทศ)
-   อยากเปลี่ยนรูป แค่แทนที่ไฟล์ในโฟลเดอร์ assets/ ชื่อเดิม
-   เพิ่มชนิดใหม่: ใส่รูป K_0..K_2.png แล้วเพิ่มคีย์ในนี้ และข้อมูลใน species.js / skills.js */
-const BG=["assets/bg/zone0.png","assets/bg/zone1.png","assets/bg/zone2.png","assets/bg/zone3.png","assets/bg/zone4.png","assets/bg/zone5.png"];
-const ATLAS={
+   assets/still/K_S.png      ภาพนิ่ง 64x64 พื้นโปร่งใส สีลดเหลือ RGB565 (เท่าที่บอร์ดแสดงได้)
+   assets/still/bg/zoneN.png พื้นหลัง 224x144 สี RGB565 */
+const STILL=true;
+const BG_ANIM=["assets/bg/zone0.png","assets/bg/zone1.png","assets/bg/zone2.png","assets/bg/zone3.png","assets/bg/zone4.png","assets/bg/zone5.png"];
+const BG_STILL=["assets/still/bg/zone0.png","assets/still/bg/zone1.png","assets/still/bg/zone2.png","assets/still/bg/zone3.png","assets/still/bg/zone4.png","assets/still/bg/zone5.png"];
+const ATLAS_ANIM={
  "0_0": "assets/sprites/0_0.png",
  "0_1": "assets/sprites/0_1.png",
  "0_2": "assets/sprites/0_2.png",
@@ -55,3 +58,54 @@ const ATLAS={
  "15_1": "assets/sprites/15_1.png",
  "15_2": "assets/sprites/15_2.png"
 };
+const ATLAS_STILL={
+ "0_0": "assets/still/0_0.png",
+ "0_1": "assets/still/0_1.png",
+ "0_2": "assets/still/0_2.png",
+ "1_0": "assets/still/1_0.png",
+ "1_1": "assets/still/1_1.png",
+ "1_2": "assets/still/1_2.png",
+ "2_0": "assets/still/2_0.png",
+ "2_1": "assets/still/2_1.png",
+ "2_2": "assets/still/2_2.png",
+ "3_0": "assets/still/3_0.png",
+ "3_1": "assets/still/3_1.png",
+ "3_2": "assets/still/3_2.png",
+ "4_0": "assets/still/4_0.png",
+ "4_1": "assets/still/4_1.png",
+ "4_2": "assets/still/4_2.png",
+ "5_0": "assets/still/5_0.png",
+ "5_1": "assets/still/5_1.png",
+ "5_2": "assets/still/5_2.png",
+ "6_0": "assets/still/6_0.png",
+ "6_1": "assets/still/6_1.png",
+ "6_2": "assets/still/6_2.png",
+ "7_0": "assets/still/7_0.png",
+ "7_1": "assets/still/7_1.png",
+ "7_2": "assets/still/7_2.png",
+ "8_0": "assets/still/8_0.png",
+ "8_1": "assets/still/8_1.png",
+ "8_2": "assets/still/8_2.png",
+ "9_0": "assets/still/9_0.png",
+ "9_1": "assets/still/9_1.png",
+ "9_2": "assets/still/9_2.png",
+ "10_0": "assets/still/10_0.png",
+ "10_1": "assets/still/10_1.png",
+ "10_2": "assets/still/10_2.png",
+ "11_0": "assets/still/11_0.png",
+ "11_1": "assets/still/11_1.png",
+ "11_2": "assets/still/11_2.png",
+ "12_0": "assets/still/12_0.png",
+ "12_1": "assets/still/12_1.png",
+ "12_2": "assets/still/12_2.png",
+ "13_0": "assets/still/13_0.png",
+ "13_1": "assets/still/13_1.png",
+ "13_2": "assets/still/13_2.png",
+ "14_0": "assets/still/14_0.png",
+ "14_1": "assets/still/14_1.png",
+ "14_2": "assets/still/14_2.png",
+ "15_0": "assets/still/15_0.png",
+ "15_1": "assets/still/15_1.png",
+ "15_2": "assets/still/15_2.png"
+};
+const BG=STILL?BG_STILL:BG_ANIM, ATLAS=STILL?ATLAS_STILL:ATLAS_ANIM;

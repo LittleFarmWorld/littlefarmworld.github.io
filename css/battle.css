@@ -1,0 +1,16 @@
+/* ===== battle.css : ฉากต่อสู้, อนิเมชัน, สไปรต์ ===== */
+.scene{position:relative;height:150px;border:2px solid #0d1f14;overflow:hidden;margin-bottom:6px}
+.gnd{position:absolute;left:0;right:0;bottom:0;height:58px;animation:scr .5s steps(4) infinite}
+@keyframes scr{to{background-position:-24px 0}}
+.tm{position:absolute;left:8px;bottom:18px;display:flex}
+.en{position:absolute;right:10px;bottom:18px;transform:scaleX(-1)}
+.run{animation:run .3s steps(2) infinite}
+@keyframes run{50%{transform:translateY(-4px)}}
+.hit{animation:hit .25s steps(2)}
+@keyframes hit{50%{filter:brightness(3)}}
+.hp{height:6px;background:#400;border:1px solid #000}.hp i{display:block;height:100%;background:#e84;width:100%}
+.fl{position:absolute;font-size:8px;color:#fff;text-shadow:1px 1px #000;animation:fl 1.2s forwards;pointer-events:none}
+@keyframes fl{to{transform:translateY(-16px);opacity:0}}
+.kl{position:absolute;left:92px;top:3px;font-size:7px;color:#fff;text-shadow:1px 1px #000}
+.sp{display:block;margin:0 auto;background-repeat:no-repeat;background-size:300% 300%;background-position:100% 100%;image-rendering:pixelated}.w .sp{animation:walk .9s steps(1) infinite}.f .sp{animation:atk 1.5s steps(1) infinite}.f .gnd{animation:none}.ez{position:absolute;transition:right 2.5s linear,opacity .3s}.fe{transform:scaleX(-1)}@keyframes walk{0%{background-position:0 0}25%{background-position:50% 0}50%{background-position:100% 0}75%{background-position:50% 0}}@keyframes atk{0%{background-position:0 50%}12%{background-position:50% 50%}24%{background-position:100% 50%}40%{background-position:0 100%}52%{background-position:50% 100%}64%{background-position:100% 100%}}@media (prefers-reduced-motion:reduce){.w .sp,.f .sp{animation:none}}
+#sc{background-size:cover;background-position:center bottom;background-repeat:no-repeat;image-rendering:pixelated}

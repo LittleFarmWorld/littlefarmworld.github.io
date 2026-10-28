@@ -1,7 +1,7 @@
 /* ===== sprites.js : สร้างสไปรต์ (CSS จากไฟล์รูป, SVG, bake ลง canvas) ===== */
 const PX={};
 function spr(k,s,sz){return `<div class='sp a${k}_${s}' style='width:${sz}px;height:${sz}px'></div>`}
-function buildCss(){let c='';BG.forEach((u,i)=>c+='#sc[data-z="'+i+'"]{background-image:url('+u+')}');for(const k in ATLAS)c+='.a'+k+"{background-image:url('"+ATLAS[k]+"')}";const s=document.createElement('style');s.textContent=c;document.head.appendChild(s)}
+function buildCss(){let c='';BG.forEach((u,i)=>c+='#sc[data-z="'+i+'"]{background-image:url('+u+')}');for(const k in ATLAS)c+='.a'+k+"{background-image:url('"+ATLAS[k]+"')}";if(STILL)c+='.sp{background-size:100% 100%!important;background-position:0 0!important;animation:none!important}.w .sp,.f .sp,.bob,.run,.hit,.gnd{animation:none!important}';const s=document.createElement('style');s.textContent=c;document.head.appendChild(s)}
 function svg(k,s,sz){
  const p=SP[k],c=p.c,d=p.d,[x1,x2,y]=p.e,f=[.78,.92,1.04][s],st=`stroke="${d}" stroke-width="1.2"`;
  const B=[

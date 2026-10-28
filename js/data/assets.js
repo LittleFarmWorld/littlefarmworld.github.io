@@ -1,7 +1,9 @@
 /* ===== assets.js : รายการไฟล์รูป =====
    - BG    : พื้นหลังของแต่ละโซน (index = เลขโซน 0-5)
    - ATLAS : สไปรต์ชีตมอนสเตอร์ คีย์ = "สายพันธุ์_ร่าง" เช่น "2_1"
-   อยากเปลี่ยนรูป แค่แทนที่ไฟล์ในโฟลเดอร์ assets/ ชื่อเดิม */
+             สายพันธุ์ 0-5 = ชุดเดิม, 6-15 = ชุดใหม่ (หอม กระเทียม ข้าวโพด มะเขือเทศ บรอกโคลี เห็ด ไชเท้า บีท มันฝรั่ง มันเทศ)
+   อยากเปลี่ยนรูป แค่แทนที่ไฟล์ในโฟลเดอร์ assets/ ชื่อเดิม
+   เพิ่มชนิดใหม่: ใส่รูป K_0..K_2.png แล้วเพิ่มคีย์ในนี้ และข้อมูลใน species.js / skills.js */
 const BG=["assets/bg/zone0.png","assets/bg/zone1.png","assets/bg/zone2.png","assets/bg/zone3.png","assets/bg/zone4.png","assets/bg/zone5.png"];
 const ATLAS={
  "0_0": "assets/sprites/0_0.png",
@@ -21,5 +23,35 @@ const ATLAS={
  "4_2": "assets/sprites/4_2.png",
  "5_0": "assets/sprites/5_0.png",
  "5_1": "assets/sprites/5_1.png",
- "5_2": "assets/sprites/5_2.png"
+ "5_2": "assets/sprites/5_2.png",
+ "6_0": "assets/sprites/6_0.png",
+ "6_1": "assets/sprites/6_1.png",
+ "6_2": "assets/sprites/6_2.png",
+ "7_0": "assets/sprites/7_0.png",
+ "7_1": "assets/sprites/7_1.png",
+ "7_2": "assets/sprites/7_2.png",
+ "8_0": "assets/sprites/8_0.png",
+ "8_1": "assets/sprites/8_1.png",
+ "8_2": "assets/sprites/8_2.png",
+ "9_0": "assets/sprites/9_0.png",
+ "9_1": "assets/sprites/9_1.png",
+ "9_2": "assets/sprites/9_2.png",
+ "10_0": "assets/sprites/10_0.png",
+ "10_1": "assets/sprites/10_1.png",
+ "10_2": "assets/sprites/10_2.png",
+ "11_0": "assets/sprites/11_0.png",
+ "11_1": "assets/sprites/11_1.png",
+ "11_2": "assets/sprites/11_2.png",
+ "12_0": "assets/sprites/12_0.png",
+ "12_1": "assets/sprites/12_1.png",
+ "12_2": "assets/sprites/12_2.png",
+ "13_0": "assets/sprites/13_0.png",
+ "13_1": "assets/sprites/13_1.png",
+ "13_2": "assets/sprites/13_2.png",
+ "14_0": "assets/sprites/14_0.png",
+ "14_1": "assets/sprites/14_1.png",
+ "14_2": "assets/sprites/14_2.png",
+ "15_0": "assets/sprites/15_0.png",
+ "15_1": "assets/sprites/15_1.png",
+ "15_2": "assets/sprites/15_2.png"
 };

@@ -24,8 +24,8 @@ function vMkt(){
  (L.length?L.map((x,i)=>`<div class="card row">${spr(x.k,stage(x),40)}<div style="flex:1"><b>${nm(x)}</b><br>Lv ${x.lv} · ${ST[stage(x)]}</div><button class="btn" ${S.coins<x.p?'disabled':''} onclick="buy(${i})">${x.p} 🪙</button></div>`).join(''):'<div class="card mut">ขายหมดแล้ว กดรีเฟรชเพื่อดูของใหม่</div>');
 }
 function vDex(){
- let n=Object.keys(S.dex).length,h=`<div class="card mut" style="text-align:center">สะสมแล้ว ${n}/18 ร่าง</div><div class="grid">`;
- for(let k=0;k<6;k++)for(let s=0;s<3;s++){const o=S.dex[k+'_'+s];
+ let n=Object.keys(S.dex).length,h=`<div class="card mut" style="text-align:center">สะสมแล้ว ${n}/${NSP*3} ร่าง</div><div class="grid">`;
+ for(let k=0;k<NSP;k++)for(let s=0;s<3;s++){const o=S.dex[k+'_'+s];
   h+=`<div class="cell" style="${o?'':'opacity:.5'}"><div style="${o?'':'filter:brightness(0)'}">${spr(k,s,36)}</div>${o?SP[k].n[s]:'???'}</div>`}
  return h+'</div>';
 }

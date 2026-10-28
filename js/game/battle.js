@@ -1,9 +1,9 @@
 /* ===== battle.js : ระบบต่อสู้ (spawn ศัตรู, วาดฉาก, ตีกัน, สกิล) ===== */
 let B={st:1,kills:0,en:null,php:0,pmx:1};
-const zn=s=>Math.min(5,Math.floor((s-1)/5)),tAtk=()=>team().reduce((a,m)=>a+(2+m.lv*1.5)*(1+stage(m)*.6),0),tHp=()=>team().reduce((a,m)=>a+10+m.lv*6,0);
+const zn=s=>Math.min(5,Math.floor((s-1)/5)),tAtk=()=>team().reduce((a,m)=>a+(2+m.lv*1.5)*(1+stage(m)*.6),0),tHp=()=>team().reduce((a,m)=>a+10+m.lv*6,0)*(1+team().reduce((a,m)=>SKT[m.k]==='hp'?a+SV[m.k][stage(m)]:a,0));
 function spawn(){
 const st=B.st,boss=B.kills>=4,tier=Math.min(2,Math.floor(st/8)+(boss?1:0)),n=boss?Math.floor(Math.random()*3):1+Math.floor(Math.random()*6),f=1.6/(n+.6);
-const mk=b=>{const mx=Math.max(4,Math.round(18*Math.pow(st,1.35)*(b?3:f)));return{k:Math.floor(Math.random()*6),s:tier,mx,hp:mx,atk:(1.5+st*1.4)*(b?1.6:f),boss:b,f:b?1:f}};
+const mk=b=>{const mx=Math.max(4,Math.round(18*Math.pow(st,1.35)*(b?3:f)));return{k:Math.floor(Math.random()*NSP),s:tier,mx,hp:mx,atk:(1.5+st*1.4)*(b?1.6:f),boss:b,f:b?1:f}};
 B.en=[];for(let i=0;i<n;i++)B.en.push(mk(false));if(boss)B.en.push(mk(true));
 B.bw=boss;B.pmx=tHp();if(!(B.php>0)||B.php>B.pmx)B.php=B.pmx;B.walk=3;paint()}
 function paint(){const c=document.getElementById('en'),sc=document.getElementById('sc');if(!c||!B.en)return;
@@ -20,19 +20,24 @@ const c2=document.getElementById('sc');if(c2){c2.classList.remove('f');void c2.o
 setTimeout(strike,360)}
 function strike(){
 if(!team().length||!B.en||B.walk>0)return;
-const al=()=>B.en.filter(e=>e.hp>0),t=team();let tot=0,red=0,thorn=0,steal=0,ev=0;
-for(const m of t){const v=SV[m.k][stage(m)];if(m.k===1)red+=v;if(m.k===2)thorn+=v;if(m.k===5)steal+=v;
+const al=()=>B.en.filter(e=>e.hp>0),t=team();let tot=0,red=0,thorn=0,steal=0,heal=0,ev=0;
+for(const m of t){const v=SV[m.k][stage(m)],ty=SKT[m.k],ic=SK[m.k][0];
+ if(ty==='guard')red+=v;if(ty==='thorn')thorn+=v;if(ty==='steal')steal+=v;if(ty==='heal')heal+=v;
  const L=al();if(!L.length)break;const e=L[Math.floor(Math.random()*L.length)];
  let x=(2+m.lv*1.5)*(1+stage(m)*.6);
- if(m.k===4&&e.boss)x*=1+v;
- if(m.k===3&&Math.random()<v){x*=2.5;fl(1,'🌑×2.5')}
- if(m.k===0&&!e.burn&&Math.random()<v){e.burn=3;e.bd=x*.4;fl(1,'🔥')}
+ if(ty==='boss'&&e.boss)x*=1+v;
+ if(ty==='crit'&&Math.random()<v){x*=2.5;fl(1,ic+'×2.5')}
+ if(ty==='burn'&&!e.burn&&Math.random()<v){e.burn=3;e.bd=x*.4;fl(1,ic)}
+ if(ty==='stun'&&Math.random()<v){e.stun=1;fl(1,ic+'มึน')}
+ if(ty==='multi'&&Math.random()<v){const o=al().filter(q=>q!==e),e2=o.length?o[Math.floor(Math.random()*o.length)]:e;e2.hp-=x*.7;tot+=x*.7;hit(e2);fl(1,ic+'×2')}
+ if(ty==='splash')for(const o of al())if(o!==e){o.hp-=x*v;tot+=x*v}
  e.hp-=x;tot+=x;hit(e)}
 for(const e of al())if(e.burn){e.hp-=e.bd;tot+=e.bd;e.burn--}
-const A2=al(),got=A2.reduce((s,e)=>s+e.atk*.6,0)*(1-Math.min(.5,red));
+const A2=al(),got=A2.filter(e=>!e.stun).reduce((s,e)=>s+e.atk*.6,0)*(1-Math.min(.5,red));
+for(const e of B.en)e.stun=0;
 if(thorn&&A2.length){A2[Math.floor(Math.random()*A2.length)].hp-=got*thorn;fl(1,'🌵')}
-B.php=Math.min(B.pmx,B.php-got+tot*steal);
-fl(1,'-'+Math.round(tot));if(steal)fl(0,'👻+'+Math.round(tot*steal));
+B.php=Math.min(B.pmx,B.php-got+tot*steal+B.pmx*heal);
+fl(1,'-'+Math.round(tot));if(steal)fl(0,'👻+'+Math.round(tot*steal));if(heal)fl(0,'💚+'+Math.round(B.pmx*heal));
 B.en.forEach((e,i)=>{if(e.hp<=0&&!e.dead){e.dead=1;S.coins+=Math.max(1,Math.round((3+B.st*2)*e.f*(e.boss?4:1)));for(const m of team())if(addXp(m,Math.max(1,Math.round((2+B.st)*e.f))))ev=m;const el=document.getElementById('e'+i);if(el)el.style.opacity=0}});
 if(B.en.every(e=>e.dead)){B.kills++;if(B.bw){say('ผ่านด่าน '+B.st+'!');if(B.st>=S.best)S.best=B.st+1;B.kills=0}B.php=Math.min(B.pmx,B.php+B.pmx*.2);spawn()}
 else if(B.php<=0){B.kills=0;B.php=0;say('ทีมแพ้ ลองอัพเลเวลก่อน');spawn()}

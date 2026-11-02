@@ -1,7 +1,7 @@
 /* ===== state.js : สถานะเกม, สูตรคำนวณ, เซฟ/โหลด, ตัวช่วยพื้นฐาน ===== */
 const stage=m=>m.lv>=12?2:m.lv>=5?1:0, need=l=>8+l*4, val=m=>15+m.lv*8+stage(m)*60, rate=m=>(0.4+m.lv*0.25)*(1+stage(m)*0.6);
-const nm=m=>SP[m.k].n[stage(m)], fmt=n=>n>=1000?(n/1000).toFixed(1)+'k':Math.floor(n);
-let S,T='farm',sid=0,L=[],last=null,tt;
+const nm=m=>no(m.k,stage(m)), fmt=n=>n>=1000?(n/1000).toFixed(1)+'k':Math.floor(n);
+let S,T='farm',sid=0,L=[],last=null,tt,dp=0;
 function load(){
  try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
  if(!S||!S.mons){S={coins:30,nid:1,mons:[],team:[],dex:{},t:Date.now()};const m=mk(0);S.mons.push(m);S.team.push(m.id);dx(m)}

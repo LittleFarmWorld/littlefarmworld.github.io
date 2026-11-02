@@ -5,6 +5,7 @@ let S,T='farm',sid=0,L=[],last=null,tt,dp=0;
 function load(){
  try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
  if(!S||!S.mons){S={coins:30,nid:1,mons:[],team:[],dex:{},t:Date.now()};const m=mk(0);S.mons.push(m);S.team.push(m.id);dx(m)}
+ S.bag=S.bag||[];S.gid=S.gid||1;/* กระเป๋าเก็บหิน */
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function mk(k,lv){return{id:S.nid++,k,lv:lv||1,xp:0}}

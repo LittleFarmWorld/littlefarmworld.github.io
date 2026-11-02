@@ -14,3 +14,8 @@
 .kl{position:absolute;left:92px;top:3px;font-size:7px;color:#fff;text-shadow:1px 1px #000}
 .sp{display:block;margin:0 auto;background-repeat:no-repeat;background-size:300% 400%;image-rendering:pixelated}.ez{position:absolute;transition:right 2.5s linear,opacity .3s}
 #sc{background-size:cover;background-position:center bottom;background-repeat:no-repeat;image-rendering:pixelated}
+/* หิน */
+.gm{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;color:#fff;font:8px 'Press Start 2P',monospace;text-shadow:1px 1px #000;clip-path:polygon(50% 0,100% 35%,80% 100%,20% 100%,0 35%);vertical-align:middle}
+.gm.e{background:#b9d79d;opacity:.6}
+.gs{display:inline-block;padding:2px;border:2px solid transparent}
+.gs.sel{border-color:#e8452c}

@@ -5,14 +5,14 @@ function vFarmOld(){
  const t=team();let h='<div class="farm">';
  for(let i=0;i<3;i++){const m=t[i];
   h+=m?`<div class="slot" onclick="feed(${m.id})"><div class="bob">${spr(m.k,stage(m),34)}</div>${nm(m)}<br>Lv <span id="lv${m.id}">${m.lv}</span><div class="bar"><i id="xp${m.id}" style="width:${m.xp/need(m.lv)*100}%"></i></div></div>`
-  :`<div class="slot" onclick="go('box')" style="padding-top:10px">+ ว่าง<br><span class="mut">เลือกจากคลัง</span></div>`}
+  :`<div class="slot" onclick="go('box')" style="padding-top:10px">+ ว่าง<br><span class="mut">เลือกจากแท็บมอน</span></div>`}
  return h+`</div><div class="mut" style="font-size:9px;text-align:center">แตะมอนเพื่อให้อาหาร (5×เลเวล 🪙 = EXP +20)</div>`;
 }
 function vBox(){
  const d=mon(sid);let h='';
  if(d){const s=stage(d),on=S.team.includes(d.id);
-  h+=`<div class="card row">${spr(d.k,s,48)}<div style="flex:1"><b>${nm(d)}</b><br>${ST[s]} · ${JOB[MON[d.k][3]]}<br>Lv ${d.lv} · +${rate(d).toFixed(1)}/วิ</div></div><div class="card mut" style="font-size:10px">${skd(d)}</div><div class="row" style="margin-bottom:6px"><button class="btn" onclick="tg(${d.id})">${on?'ถอดจากฟาร์ม':'ส่งไปฟาร์ม'}</button><button class="btn" style="background:#b8570f" onclick="sell(${d.id})">ขาย ${val(d)} 🪙</button></div>`}
- return h+'<div class="grid">'+S.mons.map(m=>`<div class="cell${m.id===sid?' sel':''}" onclick="sid=${m.id};render()">${spr(m.k,stage(m),36)}<br>Lv ${m.lv}${S.team.includes(m.id)?' ⭐':''}</div>`).join('')+'</div>';
+  h+=`<div class="card row">${spr(d.k,s,48)}<div style="flex:1"><b>${nm(d)}</b><br>${ST[s]} · ${JOB[MON[d.k][3]]}<br>Lv ${d.lv} · +${rate(d).toFixed(1)}/วิ</div></div><div class="card mut" style="font-size:10px">${skd(d)}</div>${vGems(d)}<div class="row" style="margin-bottom:6px"><button class="btn" onclick="tg(${d.id})">${on?'ถอดจากฟาร์ม':'ส่งไปฟาร์ม'}</button><button class="btn" style="background:#b8570f" onclick="sell(${d.id})">ขาย ${val(d)} 🪙</button></div>`}
+ return h+'<div class="grid">'+S.mons.map(m=>`<div class="cell${m.id===sid?' sel':''}" onclick="sid=${m.id};gs=-1;render()">${spr(m.k,stage(m),36)}<br>Lv ${m.lv}${S.team.includes(m.id)?' ⭐':''}</div>`).join('')+'</div>';
 }
 function vCatch(){
  let h=`<div class="card" style="text-align:center"><div style="font-size:30px">🌱</div>ปลูกเมล็ดลึกลับ ได้มอนร่าง 1 แบบสุ่ม<br><button class="btn" style="margin-top:6px" ${S.coins<40?'disabled':''} onclick="plant()">ปลูกเมล็ด 40 🪙</button></div>`;
@@ -32,7 +32,7 @@ function vDex(){
   h+=`<div class="cell" style="${o?'':'opacity:.55'}"><div style="${o?'':'filter:brightness(0)'}">${spr(k,s,48)}</div>${no(k,s)}</div>`}
  return h+'</div>';
 }
-const V={farm:vFarm,box:vBox,catch:vCatch,mkt:vMkt,dex:vDex,stg:vStg},TB=[['farm','⚔️','ต่อสู้'],['stg','📍',''],['box','🎒','คลัง'],['catch','🌱','ปลูก'],['mkt','🏪','ตลาด'],['dex','📖','ดัชนี']];
+const V={farm:vFarm,box:vBox,bag:vBag,catch:vCatch,mkt:vMkt,dex:vDex,stg:vStg},TB=[['farm','⚔️','ต่อสู้'],['stg','📍',''],['box','🐾','มอน'],['bag','🎒','กระเป๋า'],['catch','🌱','ปลูก'],['mkt','🏪','ตลาด'],['dex','📖','ดัชนี']];
 function render(){
  document.getElementById('ui').innerHTML=`<div class="hd"><span>🪙 <b id="co">${fmt(S.coins)}</b></span><span id="inc">+${income().toFixed(1)}/วิ</span></div><div class="main">${V[T]()}</div><div class="tabs">${TB.map(b=>`<button class="${T===b[0]?'on':''}" onclick="go('${b[0]}')">${b[1]}<br>${b[0]==='stg'?'ด่าน '+B.st:b[2]}</button>`).join('')}</div>`;
 }
@@ -42,4 +42,4 @@ function live(){
  for(const m of team()){const a=document.getElementById('xp'+m.id),b=document.getElementById('lv'+m.id);if(a)a.style.width=m.xp/need(m.lv)*100+'%';if(b)b.textContent=m.lv}
  const p=document.querySelector('.btn[onclick="plant()"]');if(p)p.disabled=S.coins<40;
 }
-function go(t){T=t;if(t!=='catch')last=null;render()}
+function go(t){T=t;gs=-1;if(t!=='catch')last=null;render()}

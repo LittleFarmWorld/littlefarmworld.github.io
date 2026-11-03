@@ -1,6 +1,7 @@
 /* ===== actions.js : การกระทำของผู้เล่น (เลือกด่าน, ให้อาหาร, ทีม, ขาย, ปลูก, ซื้อ) ===== */
 function pick(i){B.st=i;B.kills=0;B.php=0;T='farm';render();spawn()}
-function feed(id){const m=mon(id),c=5*m.lv;if(S.coins<c){say('เหรียญไม่พอ ต้องใช้ '+c);return}S.coins-=c;if(addXp(m,20))say('✨ '+nm(m)+' วิวัฒนาการ!');render();save()}
+function feed(id){const m=mon(id),c=5*m.lv;if(S.coins<c){say('เหรียญไม่พอ ต้องใช้ '+c);return}S.coins-=c;addXp(m,20);render();save()}
+function evolve(id){const m=mon(id);if(!m||!canEvo(m)){say('เลเวลยังไม่ถึง');return}if((S.evs||0)<1){say('ไม่มีศิลาวิวัฒนาการ');return}S.evs--;m.ev=stage(m)+1;dx(m);say('✨ '+nm(m)+' วิวัฒนาการ!');render();save()}
 function tg(id){const i=S.team.indexOf(id);if(i>=0)S.team.splice(i,1);else if(S.team.length<3)S.team.push(id);else say('ฟาร์มเต็ม (สูงสุด 3 ตัว)');render();save()}
 function sell(id){if(S.mons.length<=1){say('ขายตัวสุดท้ายไม่ได้');return}const m=mon(id),ng=gm(m).filter(Boolean);if(S.bag.length+ng.length>BAGCAP){say('กระเป๋าไม่พอเก็บหินของตัวนี้');return}S.bag.push(...ng);S.coins+=val(m);S.mons=S.mons.filter(x=>x.id!==id);S.team=S.team.filter(x=>x!==id);sid=0;render();save()}
 function plant(){if(S.coins<40)return;S.coins-=40;const w=MON.map(x=>RW[x[4]]);let r=Math.random()*w.reduce((a,b)=>a+b,0),k=0;while(k<NSP-1&&r>w[k]){r-=w[k];k++}const m=mk(k);S.mons.push(m);dx(m);last=m;render();save()}

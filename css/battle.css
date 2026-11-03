@@ -21,3 +21,4 @@
 .gm.e{background:#b9d79d;opacity:.6}
 .gs{display:inline-block;padding:2px;border:2px solid transparent}
 .gs.sel{border-color:#e8452c}
+.zl{position:absolute;left:0;right:0;top:16px;text-align:center;font-size:8px;color:#fff;text-shadow:-1px 0 #000,1px 0 #000,0 -1px #000,0 1px #000;pointer-events:none}

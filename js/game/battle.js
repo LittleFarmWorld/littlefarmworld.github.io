@@ -3,8 +3,8 @@ const ENEMY_X=2,BOSS_X=5; /* ตัวคูณ HP และดาเมจ: ม
 let B={st:1,kills:0,en:null,php:0,pmx:1,loop:0}; /* loop: 1 = เล่นซ้ำด่านปัจจุบัน, 0 = ไปด่านต่อไปเอง */
 function toggleLoop(){B.loop=B.loop?0:1;loopBtn()}
 function loopBtn(){const sc=document.getElementById('sc');if(!sc)return;let b=document.getElementById('lp');
-if(!b){b=document.createElement('button');b.id='lp';b.onclick=toggleLoop;b.style.cssText='position:absolute;top:4px;right:4px;z-index:500;pointer-events:auto;font:12px sans-serif;padding:3px 8px;border-radius:10px;border:2px solid #fff;color:#fff;cursor:pointer';sc.appendChild(b)}
-b.textContent=B.loop?'🔁 เล่นซ้ำ ด่าน '+B.st:'➡️ ไปต่อ';b.style.background=B.loop?'#d33':'#456'}
+if(!b){b=document.createElement('button');b.id='lp';b.onclick=toggleLoop;b.style.cssText='position:absolute;top:20px;right:4px;z-index:500;pointer-events:auto;font:bold 8px sans-serif;line-height:1;padding:3px 6px;border-radius:6px;border:1px solid #fff;color:#fff;opacity:.85;cursor:pointer';sc.appendChild(b)}
+b.textContent=B.loop?'↻ Loop':'→ Auto';b.style.background=B.loop?'#d33':'#456'}
 const tAtk=()=>team().reduce((a,m)=>a+(2+m.lv*1.5)*(1+stage(m)*.6),0),tHp=()=>team().reduce((a,m)=>a+(10+m.lv*6)*gh(m),0)*(1+team().reduce((a,m)=>skt(m.k)==='hp'?a+tv(m):a,0));
 function spawn(){
 const st=B.st,boss=B.kills>=4,tier=Math.min(2,Math.floor(st/8)+(boss?1:0)),n=boss?Math.floor(Math.random()*3):1+Math.floor(Math.random()*6),f=1.6/(n+.6);

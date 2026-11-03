@@ -1,6 +1,16 @@
 /* ===== views.js : หน้าจอทุกแท็บ + render() ===== */
-function vStg(){let h="<div class='card mut' style='text-align:center'>เลือกด่าน (ชนะบอสเพื่อปลดล็อกด่านถัดไป)</div><div class='grid' style='grid-template-columns:repeat(5,1fr)'>";for(let i=1;i<=30;i++){const o=i<=S.best;h+=`<div class='cell${i===B.st?' sel':''}' style='padding:6px 0;${o?'':'opacity:.4'}' ${o?`onclick='pick(${i})'`:''}>${o?i:'🔒'}</div>`}return h+'</div>'}
-function vFarm(){const s=B.st,z=zn(s),c=ZC[z];return `<div class='scene ${B.walk>0?'w':'f'}' id='sc' data-z='${z}' style='background-color:${c[0]}'>${team().map((m,i)=>spr(m.k,stage(m),56,`position:absolute;left:${HS[i][0]}px;bottom:${HS[i][1]}px;z-index:${100-HS[i][1]}`)).join('')}<div id='en'></div><div style='position:absolute;left:4px;top:4px;width:80px'><div class='hp'><i id='ph' style='background:#4d4'></i></div></div><div style='position:absolute;right:4px;top:4px;width:80px'><div class='hp'><i id='eh'></i></div></div><div class='kl' id='kl'></div></div>`+vFarmOld()}
+let spg=-1;/* หน้าเลือกด่านปัจจุบัน (30 ด่านต่อหน้า) */
+const SPP=30;
+function spp(d){const n=Math.ceil(NST/SPP);spg=Math.max(0,Math.min(n-1,spg+d));render()}
+function vStg(){
+ const n=Math.ceil(NST/SPP);if(spg<0)spg=Math.floor((B.st-1)/SPP);spg=Math.min(n-1,spg);
+ const a=spg*SPP+1,b=Math.min(NST,a+SPP-1);
+ let h=`<div class="card mut" style="text-align:center">ชนะบอสแล้วจะไปด่านถัดไปเอง · ปลดล็อกถึงด่าน ${S.best}</div><div class="row" style="justify-content:space-between;margin-bottom:6px"><button class="btn" onclick="spp(-1)">&lt;</button><span class="mut">ด่าน ${a}-${b} (หน้า ${spg+1}/${n})</span><button class="btn" onclick="spp(1)">&gt;</button><button class="btn" onclick="spg=Math.floor((B.st-1)/SPP);render()">ตอนนี้</button></div><div class="grid" style="grid-template-columns:repeat(5,1fr)">`;
+ for(let i=a;i<=b;i++){const o=i<=S.best;h+=`<div class='cell${i===B.st?' sel':''}' style='padding:6px 0;${o?'':'opacity:.4'}' ${o?`onclick='pick(${i})'`:''}>${o?i:'🔒'}</div>`}
+ h+='</div><div class="mut" style="margin-top:6px">';
+ for(let z=zn(a);z<=zn(b);z++){const r=zr(z);h+=`${r[0]}-${r[1]} ${ZN[z]}<br>`}
+ return h+'</div>'}
+function vFarm(){const s=B.st,z=zn(s),c=ZC[z];return `<div class='scene ${B.walk>0?'w':'f'}' id='sc' data-z='${z}' style='background-color:${c[0]}'>${team().map((m,i)=>spr(m.k,stage(m),56,`position:absolute;left:${HS[i][0]}px;bottom:${HS[i][1]}px;z-index:${100-HS[i][1]}`)).join('')}<div id='en'></div><div style='position:absolute;left:4px;top:4px;width:80px'><div class='hp'><i id='ph' style='background:#4d4'></i></div></div><div style='position:absolute;right:4px;top:4px;width:80px'><div class='hp'><i id='eh'></i></div></div><div class='kl' id='kl'></div><div class='zl'>ด่าน ${s} · ${ZN[z]}</div></div>`+vFarmOld()}
 function vFarmOld(){
  const t=team();let h='<div class="farm">';
  for(let i=0;i<3;i++){const m=t[i];
@@ -42,4 +52,4 @@ function live(){
  for(const m of team()){const a=document.getElementById('xp'+m.id),b=document.getElementById('lv'+m.id);if(a)a.style.width=m.xp/need(m.lv)*100+'%';if(b)b.textContent=m.lv}
  const p=document.querySelector('.btn[onclick="plant()"]');if(p)p.disabled=S.coins<40;
 }
-function go(t){T=t;gs=-1;if(t!=='catch')last=null;render()}
+function go(t){T=t;gs=-1;if(t==='stg')spg=Math.floor((B.st-1)/SPP);if(t!=='catch')last=null;render()}

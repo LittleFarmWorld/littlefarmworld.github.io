@@ -28,5 +28,7 @@ function upg(id){
  gRefresh();render();save()}
 function sellGem(id){const i=S.bag.findIndex(g=>g.id===id);if(i<0)return;S.coins+=gsell(S.bag[i]);S.bag.splice(i,1);gi=0;render();save()}
 function buyGem(){if(S.coins<GBUY)return;if(S.bag.length>=BAGCAP){say('กระเป๋าเต็ม');return}S.coins-=GBUY;const g=rndGem(0,false);S.bag.push(g);gi=g.id;say('ได้'+gname(g));render();save()}
-/* หินหลุดจากศัตรูที่ตาย: บอส 100%, ศัตรูทั่วไป 6% */
-function drop(e){if(Math.random()<(e.boss?1:.06)){const g=rndGem(B.st,e.boss);if(bagAdd(g))say('ได้'+gname(g));else say('กระเป๋าเต็ม หินหลุดหาย')}}
+/* ของหลุดจากศัตรูที่ตาย: หิน บอส 100% / ทั่วไป 6% · ศิลาวิวัฒนาการ เฉพาะบอส (EVDROP ใน state.js) */
+function drop(e){
+ if(Math.random()<(e.boss?1:.06)){const g=rndGem(B.st,e.boss);if(bagAdd(g))say('ได้'+gname(g));else say('กระเป๋าเต็ม หินหลุดหาย')}
+ if(e.boss&&Math.random()<EVDROP){S.evs=(S.evs||0)+1;say('ได้ 💎 ศิลาวิวัฒนาการ!')}}

@@ -1,9 +1,9 @@
 /* ===== battle.js : ระบบต่อสู้ (spawn ศัตรู, วาดฉาก, ตีกัน, สกิล) ===== */
 let B={st:1,kills:0,en:null,php:0,pmx:1};
-const zn=s=>Math.min(5,Math.floor((s-1)/5)),tAtk=()=>team().reduce((a,m)=>a+(2+m.lv*1.5)*(1+stage(m)*.6),0),tHp=()=>team().reduce((a,m)=>a+(10+m.lv*6)*gh(m),0)*(1+team().reduce((a,m)=>skt(m.k)==='hp'?a+tv(m):a,0));
+const tAtk=()=>team().reduce((a,m)=>a+(2+m.lv*1.5)*(1+stage(m)*.6),0),tHp=()=>team().reduce((a,m)=>a+(10+m.lv*6)*gh(m),0)*(1+team().reduce((a,m)=>skt(m.k)==='hp'?a+tv(m):a,0));
 function spawn(){
 const st=B.st,boss=B.kills>=4,tier=Math.min(2,Math.floor(st/8)+(boss?1:0)),n=boss?Math.floor(Math.random()*3):1+Math.floor(Math.random()*6),f=1.6/(n+.6);
-const mk=b=>{const mx=Math.max(4,Math.round(18*Math.pow(st,1.35)*(b?3:f)));return{k:Math.floor(Math.random()*NSP),s:tier,mx,hp:mx,atk:(1.5+st*1.4)*(b?1.6:f),boss:b,f:b?1:f}};
+const mk=b=>{const mx=eHp(st,b,f);return{k:Math.floor(Math.random()*NSP),s:tier,mx,hp:mx,atk:eAtk(st,b,f),boss:b,f:b?1:f}};
 B.en=[];for(let i=0;i<n;i++)B.en.push(mk(false));if(boss)B.en.push(mk(true));
 B.bw=boss;B.pmx=tHp();if(!(B.php>0)||B.php>B.pmx)B.php=B.pmx;B.walk=3;paint()}
 function paint(){const c=document.getElementById('en'),sc=document.getElementById('sc');if(!c||!B.en)return;
@@ -46,7 +46,7 @@ if(thorn&&A2.length){const o=A2[Math.floor(Math.random()*A2.length)];o.hp-=got*t
 B.php=Math.min(B.pmx,B.php-got+tot*steal+B.pmx*heal);
 if(got>=.5)ft('-'+dn(got),'fd');if(steal&&tot*steal>=.5)ft('+'+dn(tot*steal),'fh');if(heal)ft('+'+dn(B.pmx*heal),'fh');
 B.en.forEach((e,i)=>{if(e.hp<=0&&!e.dead){e.dead=1;drop(e);S.coins+=Math.max(1,Math.round((3+B.st*2)*e.f*(e.boss?4:1)));for(const m of team())if(addXp(m,Math.max(1,Math.round((2+B.st)*e.f))))ev=m;const el=document.getElementById('e'+i);if(el)el.style.opacity=0}});
-if(B.en.every(e=>e.dead)){B.kills++;if(B.bw){say('ผ่านด่าน '+B.st+'!');if(B.st>=S.best)S.best=B.st+1;B.kills=0}B.php=Math.min(B.pmx,B.php+B.pmx*.2);spawn()}
+if(B.en.every(e=>e.dead)){B.kills++;if(B.bw){const c=B.st;if(c>=S.best)S.best=Math.min(NST,c+1);B.kills=0;if(c<NST){B.st=c+1;say('ผ่านด่าน '+c+'! ไปด่าน '+B.st);render()}else say('ผ่านครบทั้ง '+NST+' ด่านแล้ว!')}B.php=Math.min(B.pmx,B.php+B.pmx*.2);spawn()}
 else if(B.php<=0){B.kills=0;B.php=0;say('ทีมแพ้ ลองอัพเลเวลก่อน');spawn()}
 if(ev){say('✨ '+nm(ev)+' วิวัฒนาการ!');render()}
 bars()}

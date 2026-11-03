@@ -1,6 +1,10 @@
 /* ===== battle.js : ระบบต่อสู้ (spawn ศัตรู, วาดฉาก, ตีกัน, สกิล) ===== */
 const ENEMY_X=2,BOSS_X=5; /* ตัวคูณ HP และดาเมจ: มอนทั่วไป x2, บอส x5 */
-let B={st:1,kills:0,en:null,php:0,pmx:1};
+let B={st:1,kills:0,en:null,php:0,pmx:1,loop:0}; /* loop: 1 = เล่นซ้ำด่านปัจจุบัน, 0 = ไปด่านต่อไปเอง */
+function toggleLoop(){B.loop=B.loop?0:1;loopBtn()}
+function loopBtn(){const sc=document.getElementById('sc');if(!sc)return;let b=document.getElementById('lp');
+if(!b){b=document.createElement('button');b.id='lp';b.onclick=toggleLoop;b.style.cssText='position:absolute;top:4px;right:4px;z-index:500;pointer-events:auto;font:12px sans-serif;padding:3px 8px;border-radius:10px;border:2px solid #fff;color:#fff;cursor:pointer';sc.appendChild(b)}
+b.textContent=B.loop?'🔁 เล่นซ้ำ ด่าน '+B.st:'➡️ ไปต่อ';b.style.background=B.loop?'#d33':'#456'}
 const tAtk=()=>team().reduce((a,m)=>a+(2+m.lv*1.5)*(1+stage(m)*.6),0),tHp=()=>team().reduce((a,m)=>a+(10+m.lv*6)*gh(m),0)*(1+team().reduce((a,m)=>skt(m.k)==='hp'?a+tv(m):a,0));
 function spawn(){
 const st=B.st,boss=B.kills>=4,tier=Math.min(2,Math.floor(st/8)+(boss?1:0)),n=boss?Math.floor(Math.random()*3):1+Math.floor(Math.random()*6),f=1.6/(n+.6);
@@ -11,7 +15,7 @@ function paint(){const c=document.getElementById('en'),sc=document.getElementByI
 c.innerHTML=B.en.map((e,i)=>{const sl=e.boss?[6,14]:(B.bw?MS[i]:ES[i]),z=e.boss?76:46;e.sl=sl;e.z=z;return `<div class='ez' id='e${i}' style='right:${B.walk>0?-120:sl[0]}px;bottom:${sl[1]}px;z-index:${100-sl[1]};${e.dead?'opacity:0':''}'><div class='hp' style='width:${Math.round(z*.6)}px;height:4px;margin:0 auto 1px'><i id='eh${i}' style='background:#e84'></i></div>${spr(e.k,e.s,z,'transform:scaleX(-1)')}</div>`}).join('');
 if(sc)sc.className='scene '+(B.walk>0?'w':'f');
 void c.offsetWidth;B.en.forEach((e,i)=>{const el=document.getElementById('e'+i);if(el)el.style.right=e.sl[0]+'px'});bars()}
-function bars(){const a=document.getElementById('eh'),b=document.getElementById('ph'),c=document.getElementById('kl');if(!B.en)return;let h=0,m=0;B.en.forEach((e,i)=>{h+=Math.max(0,e.hp);m+=e.mx;const x=document.getElementById('eh'+i);if(x)x.style.width=Math.max(0,e.hp/e.mx*100)+'%'});if(a)a.style.width=h/m*100+'%';if(b)b.style.width=Math.max(0,B.php/B.pmx*100)+'%';if(c)c.textContent=B.bw?'BOSS':B.kills+'/5'}
+function bars(){loopBtn();const a=document.getElementById('eh'),b=document.getElementById('ph'),c=document.getElementById('kl');if(!B.en)return;let h=0,m=0;B.en.forEach((e,i)=>{h+=Math.max(0,e.hp);m+=e.mx;const x=document.getElementById('eh'+i);if(x)x.style.width=Math.max(0,e.hp/e.mx*100)+'%'});if(a)a.style.width=h/m*100+'%';if(b)b.style.width=Math.max(0,B.php/B.pmx*100)+'%';if(c)c.textContent=B.bw?'BOSS':B.kills+'/5'}
 /* ตัวเลขลอย: fx = วางที่พิกัด, fe = เหนือศัตรู, ft = เหนือทีมเรา
    cls: fn ปกติ | fc คริติคอล | fb ไฟ/หนาม | fh ฟื้น HP | fd เราโดนตี | fs ป้ายสถานะ */
 let fd=0;
@@ -47,7 +51,7 @@ if(thorn&&A2.length){const o=A2[Math.floor(Math.random()*A2.length)];o.hp-=got*t
 B.php=Math.min(B.pmx,B.php-got+tot*steal+B.pmx*heal);
 if(got>=.5)ft('-'+dn(got),'fd');if(steal&&tot*steal>=.5)ft('+'+dn(tot*steal),'fh');if(heal)ft('+'+dn(B.pmx*heal),'fh');
 B.en.forEach((e,i)=>{if(e.hp<=0&&!e.dead){e.dead=1;drop(e);S.coins+=Math.max(1,Math.round((3+B.st*2)*e.f*(e.boss?4:1)));for(const m of team())if(addXp(m,Math.max(1,Math.round((2+B.st)*e.f))))ev=m;const el=document.getElementById('e'+i);if(el)el.style.opacity=0}});
-if(B.en.every(e=>e.dead)){B.kills++;if(B.bw){const c=B.st;if(c>=S.best)S.best=Math.min(NST,c+1);B.kills=0;if(c<NST){B.st=c+1;say('ผ่านด่าน '+c+'! ไปด่าน '+B.st);render()}else say('ผ่านครบทั้ง '+NST+' ด่านแล้ว!')}B.php=Math.min(B.pmx,B.php+B.pmx*.2);spawn()}
+if(B.en.every(e=>e.dead)){B.kills++;if(B.bw){const c=B.st;if(c>=S.best)S.best=Math.min(NST,c+1);B.kills=0;if(B.loop){say('🔁 เล่นซ้ำด่าน '+c);render()}else if(c<NST){B.st=c+1;say('ผ่านด่าน '+c+'! ไปด่าน '+B.st);render()}else say('ผ่านครบทั้ง '+NST+' ด่านแล้ว!')}B.php=Math.min(B.pmx,B.php+B.pmx*.2);spawn()}
 else if(B.php<=0){B.kills=0;B.php=0;say('ทีมแพ้ ลองอัพเลเวลก่อน');spawn()}
 if(ev){say('✨ '+nm(ev)+' วิวัฒนาการ!');render()}
 bars()}

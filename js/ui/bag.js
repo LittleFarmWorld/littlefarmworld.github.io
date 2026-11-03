@@ -15,7 +15,7 @@ function vBag(){
  const np=Math.ceil(BAGCAP/BPP);bp=Math.max(0,Math.min(np-1,bp));
  h+=`<div class="row" style="justify-content:space-between;margin-bottom:6px"><button class="btn" onclick="bpg(-10)">-10</button><button class="btn" onclick="bpg(-1)">&lt;</button><span class="mut">หน้า ${bp+1}/${np}</span><button class="btn" onclick="bpg(1)">&gt;</button><button class="btn" onclick="bpg(10)">+10</button></div>`;
  h+='<div class="grid" style="grid-template-columns:repeat(6,1fr)">';
- for(let i=bp*BPP;i<Math.min(BAGCAP,bp*BPP+BPP);i++){const g=sorted[i];h+=g?`<div class="cell${g.id===gi?' sel':''}" onclick="gi=${g.id===gi?0:g.id};render()">${gemC(g)}</div>`:'<div class="cell" style="opacity:.5">'+gemC(null)+'</div>'}
+ for(let i=bp*BPP;i<Math.min(BAGCAP,bp*BPP+BPP);i++){const g=sorted[i];h+=g?`<div class="cell${g.id===gi?' sel':''}" onclick="gi=${g.id===gi?0:g.id};render()">${gemC(g)}</div>`:'<div class="cell" style="opacity:.5"><span class="gm" style="visibility:hidden"></span></div>'}
  h+='</div>';
  h+=`<div class="mut" style="margin-top:6px">${Object.keys(GT).map(t=>`<span class="gm" style="background:${GT[t].c};width:10px;height:10px;vertical-align:middle"></span> ${GT[t].d}`).join(' · ')}<br>ตีบวก = ใช้หินสีเดียวกัน เลเวลเท่ากัน 1 เม็ด (+1 กับ +1 → +2)<br>หินได้จากการสู้ (บอสดรอปแน่นอน) หรือซื้อ</div>`;
  return h;

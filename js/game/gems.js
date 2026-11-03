@@ -1,6 +1,6 @@
 /* ===== gems.js (game) : ระบบหิน — สวม/ถอด/อัพเกรด/ขาย/ดรอป และโบนัสสถานะ =====
    หินที่สวมอยู่เก็บใน m.gems (6 ช่อง) หินที่ไม่ได้สวมเก็บใน S.bag (กระเป๋า) */
-let gi=0,gs=-1;/* gi = id หินที่เลือกในกระเป๋า, gs = ช่องหินที่เลือกในหน้ามอน */
+let gi=0,gs=-1,bp=0;/* gi = id หินที่เลือกในกระเป๋า, gs = ช่องหินที่เลือกในหน้ามอน, bp = หน้ากระเป๋า */
 const pc=x=>Math.round(x*100);
 const gm=m=>m.gems||(m.gems=Array(GSLOT).fill(null));
 const gsum=(m,t)=>gm(m).reduce((a,g)=>a+(g&&g.t===t?g.lv:0),0);
@@ -14,13 +14,17 @@ function gfind(id){const i=S.bag.findIndex(g=>g.id===id);if(i>=0)return{g:S.bag[
 function gRefresh(){B.pmx=tHp();if(B.php>B.pmx)B.php=B.pmx;bars()}
 function equip(mid,slot,gid){const m=mon(mid),i=S.bag.findIndex(g=>g.id===gid);if(!m||i<0||gm(m)[slot])return;m.gems[slot]=S.bag.splice(i,1)[0];gRefresh();render();save()}
 function unequip(mid,slot){const m=mon(mid),g=m&&gm(m)[slot];if(!g)return;if(!bagAdd(g)){say('กระเป๋าเต็ม');return}m.gems[slot]=null;gs=-1;gRefresh();render();save()}
+/* หินวัตถุดิบตีบวก: สีเดียวกัน เลเวลเท่ากัน อยู่ในกระเป๋า (ไม่นับตัวมันเอง) */
+const gmat=g=>S.bag.filter(x=>x.id!==g.id&&x.t===g.t&&x.lv===g.lv);
 function upg(id){
  const f=gfind(id);if(!f)return;const g=f.g;if(g.lv>=GMAX)return;
+ const mt=gmat(g)[0];if(!mt){say('ต้องมี'+gname(g)+' อีก 1 เม็ดในกระเป๋า');return}
  const c=gcost(g);if(S.coins<c){say('เหรียญไม่พอ ต้องใช้ '+c);return}
  S.coins-=c;const r=Math.random(),lv=g.lv;
- if(r<GUP[lv]){g.lv++;say('อัพเกรดสำเร็จ! Lv '+g.lv)}
- else if(r<GUP[lv]+GBRK[lv]){if(f.bag)S.bag.splice(f.i,1);else{f.m.gems[f.i]=null;gs=-1}gi=0;say('หินแตก! หายไปแล้ว')}
- else say('อัพเกรดล้มเหลว (หินไม่เสีย)');
+ const rm=x=>{const i=S.bag.findIndex(y=>y.id===x.id);if(i>=0)S.bag.splice(i,1);if(gi===x.id)gi=0};
+ if(r<GUP[lv]){rm(mt);g.lv++;say('ตีบวกสำเร็จ! Lv '+g.lv)}
+ else if(r<GUP[lv]+GBRK[lv]){rm(mt);if(f.bag)rm(g);else{f.m.gems[f.i]=null;gs=-1}say('หินแตก! เสียทั้ง 2 เม็ด')}
+ else{rm(mt);say('ตีบวกล้มเหลว เสียหินวัตถุดิบ 1 เม็ด')}
  gRefresh();render();save()}
 function sellGem(id){const i=S.bag.findIndex(g=>g.id===id);if(i<0)return;S.coins+=gsell(S.bag[i]);S.bag.splice(i,1);gi=0;render();save()}
 function buyGem(){if(S.coins<GBUY)return;if(S.bag.length>=BAGCAP){say('กระเป๋าเต็ม');return}S.coins-=GBUY;const g=rndGem(0,false);S.bag.push(g);gi=g.id;say('ได้'+gname(g));render();save()}

@@ -1,9 +1,10 @@
 /* ===== battle.js : ระบบต่อสู้ (spawn ศัตรู, วาดฉาก, ตีกัน, สกิล) ===== */
+const ENEMY_X=2,BOSS_X=5; /* ตัวคูณ HP และดาเมจ: มอนทั่วไป x2, บอส x5 */
 let B={st:1,kills:0,en:null,php:0,pmx:1};
 const tAtk=()=>team().reduce((a,m)=>a+(2+m.lv*1.5)*(1+stage(m)*.6),0),tHp=()=>team().reduce((a,m)=>a+(10+m.lv*6)*gh(m),0)*(1+team().reduce((a,m)=>skt(m.k)==='hp'?a+tv(m):a,0));
 function spawn(){
 const st=B.st,boss=B.kills>=4,tier=Math.min(2,Math.floor(st/8)+(boss?1:0)),n=boss?Math.floor(Math.random()*3):1+Math.floor(Math.random()*6),f=1.6/(n+.6);
-const mk=b=>{const mx=eHp(st,b,f);return{k:Math.floor(Math.random()*NSP),s:tier,mx,hp:mx,atk:eAtk(st,b,f),boss:b,f:b?1:f}};
+const mk=b=>{const x=b?BOSS_X:ENEMY_X,mx=eHp(st,b,f)*x;return{k:Math.floor(Math.random()*NSP),s:tier,mx,hp:mx,atk:eAtk(st,b,f)*x,boss:b,f:b?1:f}};
 B.en=[];for(let i=0;i<n;i++)B.en.push(mk(false));if(boss)B.en.push(mk(true));
 B.bw=boss;B.pmx=tHp();if(!(B.php>0)||B.php>B.pmx)B.php=B.pmx;B.walk=3;paint()}
 function paint(){const c=document.getElementById('en'),sc=document.getElementById('sc');if(!c||!B.en)return;

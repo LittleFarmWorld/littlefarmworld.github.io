@@ -21,7 +21,7 @@ function vFarmOld(){
 function vBox(){
  const d=mon(sid);let h='';
  if(d){const s=stage(d),on=S.team.includes(d.id);
-  const evr=s<2?`<div class="card row" style="justify-content:space-between"><span class="mut" style="font-size:10px">วิวัฒนาการเป็น ${ST[s+1]}: Lv ${EVLV[s]} + 💎1 (มี ${S.evs||0})</span><button class="btn" ${canEvo(d)&&(S.evs||0)>0?'':'disabled'} onclick="evolve(${d.id})">วิวัฒนาการ</button></div>`:'';
+  const evr=s<2?`<div class="card row" style="justify-content:space-between"><span class="mut" style="font-size:10px">วิวัฒนาการเป็น ${ST[s+1]}: Lv ${EVLV[s]} + 💎${EVCOST[s]} (มี ${S.evs||0})</span><button class="btn" ${canEvo(d)&&(S.evs||0)>=EVCOST[s]?'':'disabled'} onclick="evolve(${d.id})">วิวัฒนาการ</button></div>`:'';
   h+=`<div class="card row">${spr(d.k,s,48)}<div style="flex:1"><b>${nm(d)}</b><br>${ST[s]} · ${JOB[MON[d.k][3]]}<br>Lv ${d.lv} · +${rate(d).toFixed(1)}/วิ</div></div>${evr}<div class="card mut" style="font-size:10px">${skd(d)}</div>${vGems(d)}<div class="row" style="margin-bottom:6px"><button class="btn" onclick="tg(${d.id})">${on?'ถอดจากฟาร์ม':'ส่งไปฟาร์ม'}</button><button class="btn" style="background:#b8570f" onclick="sell(${d.id})">ขาย ${val(d)} 🪙</button></div>`}
  return h+'<div class="grid">'+S.mons.map(m=>`<div class="cell${m.id===sid?' sel':''}" onclick="sid=${m.id};gs=-1;render()">${spr(m.k,stage(m),36)}<br>Lv ${m.lv}${S.team.includes(m.id)?' ⭐':''}</div>`).join('')+'</div>';
 }

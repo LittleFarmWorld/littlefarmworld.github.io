@@ -25,11 +25,6 @@ function vBox(){
   h+=`<div class="card row">${spr(d.k,s,48)}<div style="flex:1"><b>${nm(d)}</b><br>${ST[s]} · ${JOB[MON[d.k][3]]}<br>Lv ${d.lv} · +${rate(d).toFixed(1)}/วิ</div></div>${evr}<div class="card mut" style="font-size:10px">${skd(d)}</div>${vGems(d)}<div class="row" style="margin-bottom:6px"><button class="btn" onclick="tg(${d.id})">${on?'ถอดจากฟาร์ม':'ส่งไปฟาร์ม'}</button><button class="btn" style="background:#b8570f" onclick="sell(${d.id})">ขาย ${val(d)} 🪙</button></div>`}
  return h+'<div class="grid">'+S.mons.map(m=>`<div class="cell${m.id===sid?' sel':''}" onclick="sid=${m.id};gs=-1;render()">${spr(m.k,stage(m),36)}<br>Lv ${m.lv}${S.team.includes(m.id)?' ⭐':''}</div>`).join('')+'</div>';
 }
-function vCatch(){
- let h=`<div class="card" style="text-align:center"><div style="font-size:30px">🌱</div>ปลูกเมล็ดลึกลับ ได้มอนร่าง 1 แบบสุ่ม<br><button class="btn" style="margin-top:6px" ${S.coins<40?'disabled':''} onclick="plant()">ปลูกเมล็ด 40 🪙</button></div>`;
- if(last)h+=`<div class="card" style="text-align:center">ได้ตัวใหม่!<br>${spr(last.k,0,72)}<br><b>${no(last.k,0)}</b><br>${JOB[MON[last.k][3]]}</div>`;
- return h;
-}
 function vMkt(){
  return `<div class="row" style="margin-bottom:6px;justify-content:space-between"><span class="mut">ตลาดจำลอง (ผู้เล่นจริงมาตอนต่อเซิร์ฟเวอร์)</span><button class="btn" onclick="gen();render()">รีเฟรช</button></div>`+
  (L.length?L.map((x,i)=>`<div class="card row">${spr(x.k,stage(x),40)}<div style="flex:1"><b>${nm(x)}</b><br>Lv ${x.lv} · ${ST[stage(x)]}</div><button class="btn" ${S.coins<x.p?'disabled':''} onclick="buy(${i})">${x.p} 🪙</button></div>`).join(''):'<div class="card mut">ขายหมดแล้ว กดรีเฟรชเพื่อดูของใหม่</div>');
@@ -43,7 +38,7 @@ function vDex(){
   h+=`<div class="cell" style="${o?'':'opacity:.55'}"><div style="${o?'':'filter:brightness(0)'}">${spr(k,s,48)}</div>${no(k,s)}</div>`}
  return h+'</div>';
 }
-const V={farm:vFarm,box:vBox,bag:vBag,catch:vCatch,mkt:vMkt,dex:vDex,stg:vStg},TB=[['farm','⚔️','ต่อสู้'],['stg','📍',''],['box','🐾','มอน'],['bag','🎒','กระเป๋า'],['catch','🌱','ปลูก'],['mkt','🏪','ตลาด'],['dex','📖','ดัชนี']];
+const V={farm:vFarm,box:vBox,bag:vBag,craft:vCraft,mkt:vMkt,dex:vDex,stg:vStg},TB=[['farm','⚔️','ต่อสู้'],['stg','📍',''],['box','🐾','มอน'],['bag','🎒','กระเป๋า'],['craft','⚒️','สร้าง'],['mkt','🏪','ตลาด'],['dex','📖','ดัชนี']];
 function render(){
  document.getElementById('ui').innerHTML=`<div class="hd"><span>🪙 <b id="co">${fmt(S.coins)}</b></span><span id="inc">+${income().toFixed(1)}/วิ</span></div><div class="main">${V[T]()}</div><div class="tabs">${TB.map(b=>`<button class="${T===b[0]?'on':''}" onclick="go('${b[0]}')">${b[1]}<br>${b[0]==='stg'?'ด่าน '+B.st:b[2]}</button>`).join('')}</div>`;
 }
@@ -51,6 +46,5 @@ function live(){
  const c=document.getElementById('co');if(c)c.textContent=fmt(S.coins);
  const i=document.getElementById('inc');if(i)i.textContent='+'+income().toFixed(1)+'/วิ';
  for(const m of team()){const a=document.getElementById('xp'+m.id),b=document.getElementById('lv'+m.id);if(a)a.style.width=m.xp/need(m.lv)*100+'%';if(b)b.textContent=m.lv}
- const p=document.querySelector('.btn[onclick="plant()"]');if(p)p.disabled=S.coins<40;
 }
-function go(t){T=t;gs=-1;if(t==='stg')spg=Math.floor((B.st-1)/SPP);if(t!=='catch')last=null;render()}
+function go(t){T=t;gs=-1;if(t==='stg')spg=Math.floor((B.st-1)/SPP);if(t!=='craft')last=null;render()}

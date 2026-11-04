@@ -8,9 +8,10 @@ const nm=m=>no(m.k,stage(m)), fmt=n=>n>=1000?(n/1000).toFixed(1)+'k':Math.floor(
 let S,T='farm',sid=0,L=[],last=null,tt,dp=0;
 function load(){
  try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
- if(!S||!S.mons){S={coins:30,nid:1,mons:[],team:[],dex:{},t:Date.now()};const m=mk(0);S.mons.push(m);S.team.push(m.id);dx(m)}
+ if(!S||!S.mons){S={coins:30,nid:1,mons:[],team:[],dex:{},t:Date.now()};for(const k of[0,1,2]){const m=mk(k);S.mons.push(m);S.team.push(m.id);dx(m)}}/* เริ่มเกมได้ No.001 002 003 */
  S.bag=S.bag||[];S.gid=S.gid||1;/* กระเป๋าเก็บหิน */
  S.evs=S.evs||0;/* จำนวนศิลาวิวัฒนาการ */
+ S.mat=S.mat||[];for(let i=0;i<7;i++)S.mat[i]=S.mat[i]||0;/* วัตถุดิบ 7 ชนิด (ตรงกับ MATS ใน craft.js) */
  for(const m of S.mons)if(m.ev===undefined)m.ev=m.lv>=12?2:m.lv>=5?1:0;/* เซฟเก่า: คงร่างปัจจุบันไว้ */
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}

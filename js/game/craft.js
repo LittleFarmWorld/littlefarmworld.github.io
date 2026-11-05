@@ -2,9 +2,10 @@
    วัตถุดิบดรอปจากการสู้ เก็บในกระเป๋า (S.mat, ซ้อนช่องละ STK) แล้วนำไปสร้างมอนสเตอร์ที่แท็บ ⚒️ สร้าง
    ยิ่งเลขมอนสเตอร์สูง ยิ่งใช้วัตถุดิบมากขึ้นและต้องใช้ระดับสูงขึ้น (ดูสูตรที่ฟังก์ชัน recipe) */
 const MATS=[['wood','ไม้','🪵'],['water','น้ำ','💧'],['core','แก่นมอนสเตอร์','🔮'],['ore','แร่','⛏️'],['crystal','ผลึก','💠'],['spirit','แก่นวิญญาณ','👻'],['legend','แก่นตำนาน','🌟']];
-/* ดรอปจากศัตรู: [โอกาสต่อศัตรู, จำนวนสูงสุดต่อครั้ง, เริ่มดรอปเมื่อถึงด่านสัดส่วนนี้ของด่านทั้งหมด] บอสได้โอกาส x5 และจำนวน x3 */
-const MDROP=[[.7,2,0],[.55,2,0],[.12,1,0],[.08,1,.15],[.05,1,.4],[.03,1,.7]];
-const LGDROP=.005; /* โอกาสที่บอสดรอปแก่นตำนาน (.005 = 0.5%) */
+/* ดรอปจากศัตรูทุกตัว (บอสโอกาสเท่ากัน): [โอกาสต่อศัตรู, จำนวนสูงสุดต่อครั้ง, เริ่มดรอปเมื่อถึงด่านสัดส่วนนี้ของด่านทั้งหมด]
+   โอกาส .01 = 1% · ปรับตัวเลขตรงนี้เพื่อให้ดรอปง่ายขึ้น/ยากขึ้น */
+const MDROP=[[.01,1,0],[.01,1,0],[.005,1,0],[.002,1,.15],[.001,1,.4],[.0005,1,.7]];
+const LGDROP=.005; /* โอกาสที่บอสดรอปแก่นตำนาน (.0001 = 0.01%) */
 const RARE_K=[110,221,332,443,554]; /* ตัวหายากมาก No.111 222 333 444 555 (ใส่เลข-1) ต้องใช้แก่นตำนาน 1,2,3,4,5 ชิ้นตามลำดับ */
 const stUnlock=i=>Math.max(1,Math.round(NST*MDROP[i][2]));
 /* สูตรสร้างของมอนสเตอร์ลำดับ k (No.k+1) → จำนวนวัตถุดิบตามลำดับใน MATS
@@ -20,8 +21,8 @@ function matDrop(e){
  const got=[];let full=0;
  MDROP.forEach((d,i)=>{
   if(B.st<stUnlock(i))return;
-  if(Math.random()<(e.boss?Math.min(1,d[0]*5):d[0])){
-   const n=(1+Math.floor(Math.random()*d[1]))*(e.boss?3:1);
+  if(Math.random()<d[0]){
+   const n=1+Math.floor(Math.random()*d[1]);
    if(matAdd(i,n))got.push(MATS[i][2]+n);else full=1}});
  if(e.boss&&Math.random()<LGDROP){if(matAdd(6,1)){got.push(MATS[6][2]+1);say('ได้ 🌟 แก่นตำนาน!')}else full=1}
  if(got.length)ft('+'+got.join(' '),'fh');
@@ -43,7 +44,7 @@ function vCraft(){
  h+=`<div class="card"><div class="row">${spr(crK,0,48)}<div style="flex:1"><b>${no(crK,0)}</b>${RARE_K.includes(crK)?' ⭐หายากมาก':''}<br>${JOB[MON[crK][3]]}</div></div><div class="row" style="flex-wrap:wrap;margin:4px 0">${r.map((x,i)=>x?reqSpan(i,x):'').join('')}</div><button class="btn" id="cbtn" ${canCraft(crK)?'':'disabled'} onclick="craft(${crK})">สร้าง</button></div>`;
  h+=`<div class="row" style="justify-content:space-between;margin:6px 0"><button class="btn" onclick="crPage(-10)">-10</button><button class="btn" onclick="crPage(-1)">&lt;</button><span class="mut">หน้า ${crP+1}/${np}</span><button class="btn" onclick="crPage(1)">&gt;</button><button class="btn" onclick="crPage(10)">+10</button></div><div class="grid" style="grid-template-columns:repeat(4,1fr)">`;
  for(let k=crP*CRPP;k<Math.min(NSP,crP*CRPP+CRPP);k++)h+=`<div class="cell${k===crK?' sel':''}" style="${canCraft(k)?'outline:2px solid #4c4;':''}" onclick="crPick(${k})">${spr(k,0,36)}<br>${no(k,0)}${RARE_K.includes(k)?'⭐':''}</div>`;
- h+=`</div><div class="mut" style="margin-top:6px;font-size:10px">วัตถุดิบดรอปจากการสู้ (บอสได้มากกว่า) · ⛏️ แร่ เริ่มด่าน ${stUnlock(3)} · 💠 ผลึก ด่าน ${stUnlock(4)} · 👻 แก่นวิญญาณ ด่าน ${stUnlock(5)} · 🌟 แก่นตำนาน เฉพาะบอส ${+(LGDROP*100).toFixed(2)}%<br>กรอบเขียว = สร้างได้ตอนนี้ · ⭐ = หายากมาก</div>`;
+ h+=`</div><div class="mut" style="margin-top:6px;font-size:10px">โอกาสดรอปต่อศัตรู 1 ตัว: ${MDROP.map((d,i)=>MATS[i][2]+(+(d[0]*100).toFixed(2))+'%').join(' ')} · ${MATS[6][2]}${+(LGDROP*100).toFixed(2)}% (บอสเท่านั้น)<br>⛏️ แร่ เริ่มด่าน ${stUnlock(3)} · 💠 ผลึก ด่าน ${stUnlock(4)} · 👻 แก่นวิญญาณ ด่าน ${stUnlock(5)}<br>กรอบเขียว = สร้างได้ตอนนี้ · ⭐ = หายากมาก</div>`;
  return h}
 /* อัพเดตตัวเลขบนหน้าสร้างตอนมีของดรอป โดยไม่ต้องวาดหน้าใหม่ */
 function craftLive(){
